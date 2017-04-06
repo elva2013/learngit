@@ -1,0 +1,97 @@
+//安装git
+git config --global user.name "LIU LI"
+git config --global user.email "297201320@qq.com"
+
+//创建版本库
+mkdir learngit
+cd learngit
+pwd
+c/users/刘莉/learngit
+
+//通过git init（初始化）命令把这个目录变成Git可以管理的仓库
+$ git init
+Initialized empty Git repository in c/users/刘莉/learngit.git/
+
+//把文件添加到版本库
+//先编写一个readme.txt文件:
+Git is a version control system.
+Git is free software.
+//把一个文件放到Git仓库需要两步:用命令git add告诉Git，把文件添加到仓库; 用命令git commit告诉Git，把文件提交到仓库.
+git add readme.txt
+git commit -m "wrote a readme file"
+[master (root-commit) cb926e7] wrote a readme file
+ 1 file changed, 2 insertions(+)
+ create mode 100644 readme.txt
+ 
+//git status命令可以时刻掌握仓库当前的状态,如果git status告诉你有文件被修改过，用git diff可以查看修改内容
+$ git status
+# On branch master
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#    modified:   readme.txt
+#
+no changes added to commit (use "git add" and/or "git commit -a")
+
+$ git diff readme.txt 
+diff --git a/readme.txt b/readme.txt
+index 46d49bf..9247db6 100644
+--- a/readme.txt
++++ b/readme.txt
+@@ -1,2 +1,2 @@
+-Git is a version control system.
++Git is a distributed version control system.
+ Git is free software.
+ 
+//git log命令显示从最近到最远的提交日志
+$ git log
+commit 3628164fb26d48395383f8f31179f24e0882e1e0
+Author: Michael Liao <askxuefeng@gmail.com>
+Date:   Tue Aug 20 15:11:49 2013 +0800
+
+    append GPL
+
+commit ea34578d5496d7dd233c827ed32a8cd576c5ee85
+Author: Michael Liao <askxuefeng@gmail.com>
+Date:   Tue Aug 20 14:53:12 2013 +0800
+
+    add distributed
+
+commit cb926e7ea50ad11b8f9e909c05226233bf755030
+Author: Michael Liao <askxuefeng@gmail.com>
+Date:   Mon Aug 19 17:51:55 2013 +0800
+
+    wrote a readme file
+
+//git log --pretty=oneline只显示关键信息
+$ git log --pretty=oneline
+3628164fb26d48395383f8f31179f24e0882e1e0 append GPL
+ea34578d5496d7dd233c827ed32a8cd576c5ee85 add distributed
+cb926e7ea50ad11b8f9e909c05226233bf755030 wrote a readme file
+
+//把当前版本“append GPL”回退到上一个版本“add distributed”，就可以使用git reset命令:
+$ git reset --hard HEAD^
+HEAD is now at ea34578 add distributed
+$ cat readme.txt
+Git is a distributed version control system.
+Git is free software.
+
+//在Git中，用HEAD表示当前版本，上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写成HEAD~100
+
+//git reflog用来记录你的每一次命令
+$ git reflog
+ea34578 HEAD@{0}: reset: moving to HEAD^
+3628164 HEAD@{1}: commit: append GPL
+ea34578 HEAD@{2}: commit: add distributed
+cb926e7 HEAD@{3}: commit (initial): wrote a readme file
+
+//总结一下“时光穿梭机”：
+HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset --hard commit_id。
+穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。
+要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。
+
+//工作区（Working Directory）就是你在电脑里能看到的目录，比如我的learngit文件夹就是一个工作区
+//版本库（Repository）:
+工作区有一个隐藏目录.git，这个不算工作区，而是Git的版本库。
+Git的版本库里存了很多东西，其中最重要的就是称为stage（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD。
